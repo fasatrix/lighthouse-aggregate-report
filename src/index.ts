@@ -80,7 +80,7 @@ export enum Categories {
   seo = 'seo',
 }
 
-interface IReport {
+export interface IReport {
   performance?: number;
   accessibility?: number;
   pwa?: number;
