@@ -1,0 +1,54 @@
+{
+  "name": "lighthouse-aggregate-report",
+  "version": "1.0.0",
+  "description": "Google Lighthouse aggregate report",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest --config jestconfig.json",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" ",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fasatrix/lighthouse-aggregate-report"
+  },
+  "keywords": [
+    "google lighthouse",
+    "lighthouse",
+    "google",
+    "performance test",
+    "accessibility",
+    "performance",
+    "pwa",
+    "best-practices",
+    "seo"
+  ],
+  "author": "Fabio Santoro",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/fasatrix/lighthouse-aggregate-report/issues"
+  },
+  "homepage": "https://github.com/fasatrix/lighthouse-aggregate-report#readme",
+  "dependencies": {
+    "lighthouse": "^9.6.5",
+    "playwright": "^1.24.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "jest": "^27.4.4",
+    "prettier": "^2.5.1",
+    "ts-jest": "^27.1.1",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.5.3"
+  },
+  "files": [
+    "lib/**/*"
+  ]
+}

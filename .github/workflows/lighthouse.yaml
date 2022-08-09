@@ -1,0 +1,27 @@
+name: CI GOOGLE LIGHTHOUSE
+on:
+  push:
+  pull_request:
+    paths:
+      - 'src/**'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Begin CI
+        uses: actions/checkout@v3
+
+      - name: Use Node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm i
+        working-directory: ./
+
+      - name: Run Jest Tests
+        run: |
+          npm run test
+        working-directory: ./
