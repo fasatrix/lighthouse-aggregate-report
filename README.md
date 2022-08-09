@@ -32,6 +32,20 @@ A Google Lighthouse aggregate Test Reporter
        Assertion: expect(results.accessibility).to.eq(myThreshold)
     
      ```
+3)  Full head for troubleshooting:
+      ```
+       import { lighthouseReport, Categories} from 'lighthouse-aggregate-report';
+       const options = {
+         Login: {
+             headed: true
+         },
+       };
+       const results = await lighthouseReport(options);
+       console.log(results)
+       Output:  { 'accessibility': 83, pwa: 88 }
+       Assertion: expect(results.accessibility).to.eq(myThreshold)
+    
+     ```    
 
 ## Contribution
 Fork, add your changes and create a pull request 
