@@ -89,20 +89,52 @@ interface IReport {
 }
 
 interface IOptions {
+  /**
+   * Description: The URL to be analysed
+   * @required
+   */
   url: string;
+  /**
+   * Description: The login details if authentication is required
+   */
   login?: {
+    /**
+     * Description: The username required for authentication
+     * @required if login is needed
+     */
     username: string;
+    /**
+     * Description: The password required for authentication
+     * @required if login is needed
+     */
     password: string;
+    /**
+     * Description: The username input box selector (accepts all types: CSS, XPATH, or Text)
+     * @required if login is needed
+     */
     usernameSelector: string;
+    /**
+     * Description: The password input box selector (accepts all types: CSS, XPATH, or Text)
+     * @required if login is needed
+     */
     passwordSelector: string;
+    /**
+     * Description: The submit button selector (accepts all types: CSS, XPATH, or Text) required to submit the Login details
+     * @required if login is needed
+     */
     buttonSelector: string;
   };
   lighthouse?: {
-    output?: string;
+    /**
+     * Description: The desired Lighthouse metrics to be generated
+     * @default 'performance', 'accessibility', 'pwa', 'best-practices', 'seo'
+     * @valid all in Categories enum
+     */
     onlyCategories?: Categories[];
-    onlyAudits?: string[];
-    disableStorageReset?: boolean;
-    screenEmulation?: { disabled: boolean };
+    /**
+     * Description: Port to run the chromium listener
+     * @default 8041
+     */
     port?: number;
   };
 }
