@@ -18,7 +18,7 @@ const login = async (options: IOptions, browser: BrowserContext) => {
 export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
   const userDataDir = './';
   const browser = await chromium.launchPersistentContext(userDataDir, {
-    headless: false,
+    headless: true,
     args: [`--remote-debugging-port=${port}`],
     slowMo: 50,
   });
