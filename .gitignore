@@ -11,6 +11,8 @@ lib
 
 # JS file
 **/*.js
+!\.eslintrc.js
+
 # Dependency directories
 node_modules/
 
