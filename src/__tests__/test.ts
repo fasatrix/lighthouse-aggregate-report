@@ -70,7 +70,6 @@ describe('I should be able to get Partial metrics for Authenticated App', () => 
     expect(results.seo >= 0).toBeTruthy();
   });
   it('it should return Best Practises', async () => {
-    console.log(results);
     // @ts-ignore
     expect(results['best-practices'] >= 0).toBeTruthy();
   });
