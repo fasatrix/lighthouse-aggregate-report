@@ -15,20 +15,8 @@ const login = async (options: IOptions, browser: BrowserContext) => {
   await Promise.all([page.click(options.Login!.buttonSelector), page.waitForNavigation()]);
 };
 
-export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
-  const userDataDir = './';
-  const browser = await chromium.launchPersistentContext(userDataDir, {
-    headless: !options.Login?.headed,
-    args: [`--remote-debugging-port=${port}`],
-    slowMo: 50,
-  });
+export const configurationSettings = (options:IOptions) =>{
 
-  await browser.clearPermissions();
-  await browser.clearCookies();
-
-  if (options.Login) {
-    await login(options, browser);
-  }
   const categories = ['performance', 'accessibility', 'pwa', 'best-practices', 'seo'];
 
   const defaultOptions = {
@@ -50,6 +38,26 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
   if (finalOptions.onlyCategories.length === 0) {
     finalOptions.onlyCategories = categories;
   }
+
+  return finalOptions;
+}
+
+export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
+  const userDataDir = './';
+  const browser = await chromium.launchPersistentContext(userDataDir, {
+    headless: !options.Login?.headed,
+    args: [`--remote-debugging-port=${port}`],
+    slowMo: 50,
+  });
+
+  await browser.clearPermissions();
+  await browser.clearCookies();
+
+  if (options.Login) {
+    await login(options, browser);
+  }
+
+  const finalOptions = configurationSettings(options);
 
   const runnerResult = await lighthouse(options.targetUrl, finalOptions);
 
