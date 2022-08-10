@@ -1,13 +1,13 @@
 {
   "name": "lighthouse-aggregate-report",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Google Lighthouse aggregate report",
   "main": "lib/index.js",
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" ",
-    "lint": "eslint -c .eslintrc.js --ext .ts src/*.ts",
+    "lint": "eslint -c .eslintrc.json --ext .ts src",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",

@@ -26,10 +26,6 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
   await browser.clearPermissions();
   await browser.clearCookies();
 
-  if (options.lighthouse?.extraHeaders) {
-    options.lighthouse.extraHeaders = options.lighthouse?.extraHeaders;
-  }
-
   if (options.Login) {
     await login(options, browser);
   }
@@ -45,6 +41,11 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
   };
 
   const finalOptions = { ...defaultOptions, ...options.lighthouse };
+
+  // if both Login and Authorization token is provided, default will be Login
+  if (finalOptions.extraHeaders && options.Login) {
+    delete finalOptions.extraHeaders;
+  }
 
   if (finalOptions.onlyCategories.length === 0) {
     finalOptions.onlyCategories = categories;
