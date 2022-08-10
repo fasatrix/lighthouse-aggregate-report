@@ -1,4 +1,4 @@
-import { lighthouseReport, Categories } from '../index';
+import { lighthouseReport, configurationSettings, Categories } from '../index';
 
 describe('I should be able to get Partial metrics', () => {
   let results = {};
@@ -56,7 +56,7 @@ describe('I should be able to get Partial metrics for Authenticated App', () => 
       targetUrl: 'http://automationpractice.multiformis.com/index.php?controller=authentication&back=my-account',
       lighthouse: { onlyCategories: [Categories.bestPractises, Categories.seo] },
       Login: {
-        username: 'heretohavefun400@gmail.com',
+        username: 'foo@foo.com',
         password: '123456789',
         usernameSelector: '#email',
         passwordSelector: '#passwd',
@@ -82,7 +82,7 @@ describe('I should be able to get metrics for Authenticated App if targetUrl and
       targetUrl: 'http://automationpractice.multiformis.com/',
       Login: {
         loginUrl: 'http://automationpractice.multiformis.com/index.php?controller=authentication&back=my-account',
-        username: 'heretohavefun400@gmail.com',
+        username: 'foo@foo.com',
         password: '123456789',
         usernameSelector: '#email',
         passwordSelector: '#passwd',
@@ -98,5 +98,85 @@ describe('I should be able to get metrics for Authenticated App if targetUrl and
   it('it should return Best Practises', () => {
     // @ts-ignore
     expect(results['best-practices'] >= 0).toBeTruthy();
+  });
+});
+
+describe('It should default to Login if both Authorization and Login are passed in the config', () => {
+  let resultsReporter: any;
+  let resultsConf: any;
+  beforeAll(async () => {
+    const options = {
+      targetUrl: 'http://automationpractice.multiformis.com/',
+      Login: {
+        loginUrl: 'http://automationpractice.multiformis.com/index.php?controller=authentication&back=my-account',
+        username: 'foo@foo.com',
+        password: '123456789',
+        usernameSelector: '#email',
+        passwordSelector: '#passwd',
+        buttonSelector: '#SubmitLogin'
+      },
+      lighthouse: {
+        extraHeaders: {
+          Authorization: 'Bearer XXXXXXXXXXXXXXXXXXXX',
+        },
+      },
+    };
+    resultsConf = await configurationSettings(options);
+    resultsReporter = await lighthouseReport(options);
+
+  });
+  it('it should NOT return extra headers', () => {
+    expect(resultsConf.extraHeaders).toBeUndefined();
+  });
+    it('it should return seo', () => {
+      expect(resultsReporter.seo >= 0).toBeTruthy();
+    });
+    it('it should return Best Practises', () => {
+      expect(resultsReporter['best-practices'] >= 0).toBeTruthy();
+    });
+    it('it should return Performance', () => {
+      expect(resultsReporter['performance'] >= 0).toBeTruthy();
+    });
+  it('it should return Accessibility', () => {
+    expect(resultsReporter['accessibility'] >= 0).toBeTruthy();
+  });
+  it('it should return PWA', () => {
+    expect(resultsReporter['pwa'] >= 0).toBeTruthy();
+  });
+});
+
+describe('It should be using extraHeaders if passed in the config', () => {
+  let resultsReporter: any;
+  let resultsConf: any;
+  beforeAll(async () => {
+    const options = {
+      targetUrl: 'http://automationpractice.multiformis.com/',
+      lighthouse: {
+        extraHeaders: {
+          Authorization: 'Bearer XXXXXXXXXXXXXXXXXXXX',
+        },
+      },
+    };
+    resultsConf = await configurationSettings(options);
+    resultsReporter = await lighthouseReport(options);
+
+  });
+  it('it should NOT return extra headers', () => {
+    expect(resultsConf.extraHeaders).toBeTruthy();
+  });
+  it('it should return seo', () => {
+    expect(resultsReporter.seo >= 0).toBeTruthy();
+  });
+  it('it should return Best Practises', () => {
+    expect(resultsReporter['best-practices'] >= 0).toBeTruthy();
+  });
+  it('it should return Performance', () => {
+    expect(resultsReporter['performance'] >= 0).toBeTruthy();
+  });
+  it('it should return Accessibility', () => {
+    expect(resultsReporter['accessibility'] >= 0).toBeTruthy();
+  });
+  it('it should return PWA', () => {
+    expect(resultsReporter['pwa'] >= 0).toBeTruthy();
   });
 });
