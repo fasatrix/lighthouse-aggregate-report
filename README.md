@@ -9,7 +9,7 @@ A Google Lighthouse aggregate Test Reporter
 
 ### Usage
 1) Default Lighthouse report (performance, accessibility, pwa, best-practices, seo):
-      ```
+      ```javascript
        import { lighthouseReport } from 'lighthouse-aggregate-report';
        const options = {
           url: 'https://google.com',
@@ -20,7 +20,7 @@ A Google Lighthouse aggregate Test Reporter
        Assertion: expect(results.performance >= 80).toBeTruthy();
      ```
 2)  Only selected metrics (e.g.,  'accessibility', 'pwa'):
-      ```
+      ```javascript
        import { lighthouseReport, Categories} from 'lighthouse-aggregate-report';
        const options = {
           url: 'https://google.com',
@@ -33,7 +33,7 @@ A Google Lighthouse aggregate Test Reporter
     
      ```
 3)  Full head for troubleshooting:
-      ```
+      ```javascript
        import { lighthouseReport, Categories} from 'lighthouse-aggregate-report';
        const options = {
          Login: {
