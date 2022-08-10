@@ -113,7 +113,7 @@ describe('It should default to Login if both Authorization and Login are passed 
         password: '123456789',
         usernameSelector: '#email',
         passwordSelector: '#passwd',
-        buttonSelector: '#SubmitLogin'
+        buttonSelector: '#SubmitLogin',
       },
       lighthouse: {
         extraHeaders: {
@@ -121,27 +121,26 @@ describe('It should default to Login if both Authorization and Login are passed 
         },
       },
     };
-    resultsConf = await configurationSettings(options);
+    resultsConf = configurationSettings(options);
     resultsReporter = await lighthouseReport(options);
-
   });
   it('it should NOT return extra headers', () => {
     expect(resultsConf.extraHeaders).toBeUndefined();
   });
-    it('it should return seo', () => {
-      expect(resultsReporter.seo >= 0).toBeTruthy();
-    });
-    it('it should return Best Practises', () => {
-      expect(resultsReporter['best-practices'] >= 0).toBeTruthy();
-    });
-    it('it should return Performance', () => {
-      expect(resultsReporter['performance'] >= 0).toBeTruthy();
-    });
+  it('it should return seo', () => {
+    expect(resultsReporter.seo >= 0).toBeTruthy();
+  });
+  it('it should return Best Practises', () => {
+    expect(resultsReporter['best-practices'] >= 0).toBeTruthy();
+  });
+  it('it should return Performance', () => {
+    expect(resultsReporter.performance >= 0).toBeTruthy();
+  });
   it('it should return Accessibility', () => {
-    expect(resultsReporter['accessibility'] >= 0).toBeTruthy();
+    expect(resultsReporter.accessibility >= 0).toBeTruthy();
   });
   it('it should return PWA', () => {
-    expect(resultsReporter['pwa'] >= 0).toBeTruthy();
+    expect(resultsReporter.pwa >= 0).toBeTruthy();
   });
 });
 
@@ -157,9 +156,8 @@ describe('It should be using extraHeaders if passed in the config', () => {
         },
       },
     };
-    resultsConf = await configurationSettings(options);
+    resultsConf = configurationSettings(options);
     resultsReporter = await lighthouseReport(options);
-
   });
   it('it should NOT return extra headers', () => {
     expect(resultsConf.extraHeaders).toBeTruthy();
@@ -171,12 +169,12 @@ describe('It should be using extraHeaders if passed in the config', () => {
     expect(resultsReporter['best-practices'] >= 0).toBeTruthy();
   });
   it('it should return Performance', () => {
-    expect(resultsReporter['performance'] >= 0).toBeTruthy();
+    expect(resultsReporter.performance >= 0).toBeTruthy();
   });
   it('it should return Accessibility', () => {
-    expect(resultsReporter['accessibility'] >= 0).toBeTruthy();
+    expect(resultsReporter.accessibility >= 0).toBeTruthy();
   });
   it('it should return PWA', () => {
-    expect(resultsReporter['pwa'] >= 0).toBeTruthy();
+    expect(resultsReporter.pwa >= 0).toBeTruthy();
   });
 });

@@ -15,8 +15,7 @@ const login = async (options: IOptions, browser: BrowserContext) => {
   await Promise.all([page.click(options.Login!.buttonSelector), page.waitForNavigation()]);
 };
 
-export const configurationSettings = (options:IOptions) =>{
-
+export const configurationSettings = (options: IOptions) => {
   const categories = ['performance', 'accessibility', 'pwa', 'best-practices', 'seo'];
 
   const defaultOptions = {
@@ -40,7 +39,7 @@ export const configurationSettings = (options:IOptions) =>{
   }
 
   return finalOptions;
-}
+};
 
 export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
   const userDataDir = './';
