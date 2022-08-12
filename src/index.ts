@@ -16,12 +16,20 @@ const login = async (options: IOptions, browser: BrowserContext) => {
 };
 
 export const configurationSettings = (options: IOptions) => {
-  const categories = ['performance', 'accessibility', 'pwa', 'best-practices', 'seo'];
+  const categories = [
+    Categories.performance,
+    Categories.accessibility,
+    Categories.pwa,
+    Categories.bestPractises,
+    Categories.seo,
+  ];
+
+  const audits = [Audits.firstContentfulPaint, Audits.interactive];
 
   const defaultOptions = {
     output: 'html',
     onlyCategories: categories,
-    onlyAudits: ['viewport'],
+    onlyAudits: [Audits.interactive, Audits.firstContentfulPaint],
     disableStorageReset: true,
     screenEmulation: { disabled: true },
     port,
@@ -36,6 +44,10 @@ export const configurationSettings = (options: IOptions) => {
 
   if (finalOptions.onlyCategories.length === 0) {
     finalOptions.onlyCategories = categories;
+  }
+
+  if (finalOptions.onlyAudits.length === 0) {
+    finalOptions.onlyAudits = audits;
   }
 
   return finalOptions;
@@ -70,6 +82,13 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
       }
     }
   }
+  for (const audit of finalOptions.onlyAudits) {
+    for (const [key] of Object.entries(runnerResult.lhr.audits)) {
+      if (key.includes(audit) && runnerResult.lhr.audits[key].score * 100 > 0) {
+        report[audit] = runnerResult.lhr.audits[key].score * 100;
+      }
+    }
+  }
   return report;
 };
 
@@ -79,6 +98,20 @@ export enum Categories {
   pwa = 'pwa',
   bestPractises = 'best-practices',
   seo = 'seo',
+}
+
+export enum Audits {
+  firstContentfulPaint = 'first-contentful-paint',
+  firstMeaningfulPaint = 'first-meaningful-paint',
+  largestContentfulPaint = 'largest-contentful-paint',
+  largestContentfulPaintAllFrames = 'largest-contentful-paint-all-frames',
+  cumulativeLayoutShift = 'cumulative-layout-shift',
+  maxPotentialFid = 'max-potential-fid',
+  totalBlockingTime = 'total-blocking-time',
+  interactive = 'interactive',
+  speedIndex = 'speed-index',
+  redirects = 'redirects',
+  viewport = 'viewport',
 }
 
 export type IReport = {
@@ -140,8 +173,14 @@ interface IOptions {
      */
     headed?: boolean;
   };
-
   lighthouse?: {
+    /**
+     * Description: The desired Lighthouse audit metrics to be generated
+     *
+     * @default 'interactive', 'first-contentful-paint'
+     * @valid all in Audits enum
+     */
+    onlyAudits?: Audits[];
     /**
      * Description: The desired Lighthouse metrics to be generated
      *

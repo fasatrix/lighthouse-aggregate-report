@@ -1,4 +1,4 @@
-import { lighthouseReport, configurationSettings, Categories } from '../index';
+import { lighthouseReport, configurationSettings, Categories, Audits } from '../index';
 
 describe('I should be able to get Partial metrics', () => {
   let results = {};
@@ -176,5 +176,88 @@ describe('It should be using extraHeaders if passed in the config', () => {
   });
   it('it should return PWA', () => {
     expect(resultsReporter.pwa >= 0).toBeTruthy();
+  });
+});
+
+describe('I should be able to get audits metrics different than defaul', () => {
+  let results = {};
+  beforeAll(async () => {
+    const options = {
+      targetUrl: 'https://google.com',
+      lighthouse: {
+        onlyAudits: [
+          Audits.firstContentfulPaint,
+          Audits.firstMeaningfulPaint,
+          Audits.largestContentfulPaint,
+          Audits.largestContentfulPaintAllFrames,
+          Audits.cumulativeLayoutShift,
+          Audits.maxPotentialFid,
+          Audits.totalBlockingTime,
+          Audits.interactive,
+          Audits.speedIndex,
+          Audits.redirects,
+          Audits.viewport,
+        ],
+      },
+    };
+    results = await lighthouseReport(options);
+  });
+  it('it should return first-meaningful-paint', () => {
+    // @ts-ignore
+    expect(results['first-meaningful-paint'] >= 0).toBeTruthy();
+  });
+  it('it should return first-contentful-paint', () => {
+    // @ts-ignore
+    expect(results['first-contentful-paint'] >= 0).toBeTruthy();
+  });
+  it('it should return largest-contentful-paint', () => {
+    // @ts-ignore
+    expect(results['largest-contentful-paint'] >= 0).toBeTruthy();
+  });
+  it('it should return cumulative-layout-shift', () => {
+    // @ts-ignore
+    expect(results['cumulative-layout-shift'] >= 0).toBeTruthy();
+  });
+  it('it should return max-potential-fid', () => {
+    // @ts-ignore
+    expect(results['max-potential-fid'] >= 0).toBeTruthy();
+  });
+  it('it should return total-blocking-time', () => {
+    // @ts-ignore
+    expect(results['total-blocking-time'] >= 0).toBeTruthy();
+  });
+  it('it should return interactive', () => {
+    // @ts-ignore
+    expect(results.interactive >= 0).toBeTruthy();
+  });
+  it('it should return speed-index', () => {
+    // @ts-ignore
+    expect(results['speed-index'] >= 0).toBeTruthy();
+  });
+  it('it should return redirects', () => {
+    // @ts-ignore
+    expect(results.redirects >= 0).toBeTruthy();
+  });
+  it('it should return viewport', () => {
+    // @ts-ignore
+    expect(results.viewport >= 0).toBeTruthy();
+  });
+});
+
+describe('I should be able to get the default audits metrics', () => {
+  let results = {};
+  beforeAll(async () => {
+    const options = {
+      targetUrl: 'https://google.com',
+    };
+    results = await lighthouseReport(options);
+  });
+  it('it should return interactive', () => {
+    // @ts-ignore
+    expect(results.interactive >= 0).toBeTruthy();
+  });
+  it('it should return first-contentful-paint', () => {
+    // @ts-ignore
+    expect(results['first-contentful-paint'] >= 0).toBeTruthy();
   });
 });
