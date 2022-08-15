@@ -16,6 +16,7 @@
   "root": true,
   "rules": {
     "@typescript-eslint/adjacent-overload-signatures": "error",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",

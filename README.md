@@ -8,6 +8,7 @@ A Google Lighthouse aggregate Test Reporter
 
 
 ### Usage
+More examples can be found inspecting the tests (`src/__test__/test.ts`)
 1) Default Lighthouse report (performance, accessibility, pwa, best-practices, seo):
       ```javascript
        import { lighthouseReport } from 'lighthouse-aggregate-report';
@@ -69,7 +70,21 @@ A Google Lighthouse aggregate Test Reporter
        Output:  { 'accessibility': 83, pwa: 88 }
        Assertion: expect(results.accessibility).to.eq(myThreshold)
     
-     ```    
+     ``` 
+4)  Mobile Report:
+      ```javascript
+       import { lighthouseReport } from 'lighthouse-aggregate-report';
+        const options = {
+            isMobile: true,
+            targetUrl: 'https://google.com',
+        };
+       const results = await lighthouseReport(options);
+       console.log(results)
+       Output:  { 'accessibility': 50, pwa: 88 }
+       Assertion: expect(results.accessibility).to.eq(myThreshold)
+    
+     ```       
+
 
 ## Contribution
 Fork, add your changes and create a pull request 

@@ -1,5 +1,6 @@
 const lighthouse = require('lighthouse');
 import { BrowserContext, chromium } from 'playwright';
+import { mobileConfig, desktopConfig } from './helpers/helpers';
 
 const port = 8041;
 
@@ -15,7 +16,7 @@ const login = async (options: IOptions, browser: BrowserContext) => {
   await Promise.all([page.click(options.Login!.buttonSelector), page.waitForNavigation()]);
 };
 
-export const configurationSettings = (options: IOptions) => {
+export const flagsSettings = (flags: IOptions) => {
   const categories = [
     Categories.performance,
     Categories.accessibility,
@@ -26,31 +27,28 @@ export const configurationSettings = (options: IOptions) => {
 
   const audits = [Audits.firstContentfulPaint, Audits.interactive];
 
-  const defaultOptions = {
+  const defaultFlags = {
     output: 'html',
     onlyCategories: categories,
     onlyAudits: [Audits.interactive, Audits.firstContentfulPaint],
-    disableStorageReset: true,
-    screenEmulation: { disabled: true },
     port,
   };
 
-  const finalOptions = { ...defaultOptions, ...options.lighthouse };
+  const finalFlags = { ...defaultFlags, ...flags.lighthouse };
 
   // if both Login and Authorization token is provided, default will be Login
-  if (finalOptions.extraHeaders && options.Login) {
-    delete finalOptions.extraHeaders;
+  if (finalFlags.extraHeaders && flags.Login) {
+    delete finalFlags.extraHeaders;
   }
 
-  if (finalOptions.onlyCategories.length === 0) {
-    finalOptions.onlyCategories = categories;
+  if (finalFlags.onlyCategories.length === 0) {
+    finalFlags.onlyCategories = categories;
   }
 
-  if (finalOptions.onlyAudits.length === 0) {
-    finalOptions.onlyAudits = audits;
+  if (finalFlags.onlyAudits.length === 0) {
+    finalFlags.onlyAudits = audits;
   }
-
-  return finalOptions;
+  return finalFlags;
 };
 
 export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
@@ -68,21 +66,22 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
     await login(options, browser);
   }
 
-  const finalOptions = configurationSettings(options);
+  const finalFlags = flagsSettings(options);
+  const config = options.isMobile ? mobileConfig : desktopConfig;
 
-  const runnerResult = await lighthouse(options.targetUrl, finalOptions);
+  const runnerResult = await lighthouse(options.targetUrl, finalFlags, config);
 
   await browser.close();
 
   const report: IReport = {};
-  for (const category of finalOptions.onlyCategories) {
+  for (const category of finalFlags.onlyCategories) {
     for (const [key] of Object.entries(runnerResult.lhr.categories)) {
       if (key.includes(category) && runnerResult.lhr.categories[key].score * 100 > 0) {
         report[category] = runnerResult.lhr.categories[key].score * 100;
       }
     }
   }
-  for (const audit of finalOptions.onlyAudits) {
+  for (const audit of finalFlags.onlyAudits) {
     for (const [key] of Object.entries(runnerResult.lhr.audits)) {
       if (key.includes(audit) && runnerResult.lhr.audits[key].score * 100 > 0) {
         report[audit] = runnerResult.lhr.audits[key].score * 100;
@@ -130,6 +129,12 @@ interface IOptions {
    * @required
    */
   targetUrl: string;
+  /**
+   * Description: The flag to set the type of report (mobile or desktop)
+   *
+   * @default false
+   */
+  isMobile?: boolean;
   Login?: {
     /**
      * Description: The URL to be used to Login if redirect to Login is not provided by the Target URL
