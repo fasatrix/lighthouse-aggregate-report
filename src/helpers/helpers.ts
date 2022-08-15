@@ -1,4 +1,6 @@
-const lighthouseConstants = require('../../node_modules/lighthouse/lighthouse-core/config/constants');
+const path = require('path');
+const constant = path.join(process.cwd(), './node_modules/lighthouse/lighthouse-core/config', 'constants');
+const lighthouseConstants = require(constant);
 export const mobileConfig = {
   extends: 'lighthouse:default',
   settings: {
