@@ -40,6 +40,9 @@ describe('I should be able to get default metrics', () => {
   it('it should return PWA', () => {
     expect(results!.pwa! >= 0).toBeTruthy();
   });
+  it('it should return resource-summary', () => {
+    expect(results['resource-summary']!).toBeTruthy();
+  });
 });
 
 describe('I should be able to get Partial metrics for Authenticated App', () => {

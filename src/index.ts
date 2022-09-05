@@ -17,7 +17,7 @@ const login = async (options: IOptions, browser: BrowserContext) => {
 };
 
 export const flagsSettings = (flags: IOptions) => {
-  const categories = [
+  const onlyCategories = [
     Categories.performance,
     Categories.accessibility,
     Categories.pwa,
@@ -25,12 +25,12 @@ export const flagsSettings = (flags: IOptions) => {
     Categories.seo,
   ];
 
-  const audits = [Audits.firstContentfulPaint, Audits.interactive];
+  const onlyAudits = [Audits.firstContentfulPaint, Audits.interactive, Audits.resourceSummary];
 
   const defaultFlags = {
     output: 'html',
-    onlyCategories: categories,
-    onlyAudits: [Audits.interactive, Audits.firstContentfulPaint],
+    onlyCategories,
+    onlyAudits,
     port,
   };
 
@@ -42,11 +42,11 @@ export const flagsSettings = (flags: IOptions) => {
   }
 
   if (finalFlags.onlyCategories.length === 0) {
-    finalFlags.onlyCategories = categories;
+    finalFlags.onlyCategories = onlyCategories;
   }
 
   if (finalFlags.onlyAudits.length === 0) {
-    finalFlags.onlyAudits = audits;
+    finalFlags.onlyAudits = onlyAudits;
   }
   return finalFlags;
 };
@@ -57,6 +57,7 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
     headless: !options.Login?.headed,
     args: [`--remote-debugging-port=${port}`],
     slowMo: 50,
+    timeout: 24000000,
   });
 
   await browser.clearPermissions();
@@ -67,6 +68,7 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
   }
 
   const finalFlags = flagsSettings(options);
+
   const config = options.isMobile ? mobileConfig : desktopConfig;
 
   const runnerResult = await lighthouse(options.targetUrl, finalFlags, config);
@@ -86,8 +88,18 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
       if (key.includes(audit) && runnerResult.lhr.audits[key].score * 100 > 0) {
         report[audit] = runnerResult.lhr.audits[key].score * 100;
       }
+      if (key === Audits.resourceSummary && runnerResult.lhr.audits[Audits.resourceSummary].details.items.length > 0) {
+        const total = runnerResult.lhr.audits['resource-summary'].details.items.filter(
+          (item: { resourceType: string; }) => item.resourceType === 'total',
+        );
+        report[Audits.resourceSummary] = {
+          requestCount: total[0].requestCount,
+          transferSize: total[0].transferSize / 1000,
+        };
+      }
     }
   }
+
   return report;
 };
 
@@ -111,6 +123,7 @@ export enum Audits {
   speedIndex = 'speed-index',
   redirects = 'redirects',
   viewport = 'viewport',
+  resourceSummary = 'resource-summary',
 }
 
 export type IReport = {
