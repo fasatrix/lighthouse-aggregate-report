@@ -55,7 +55,13 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
   const userDataDir = './';
   const browser = await chromium.launchPersistentContext(userDataDir, {
     headless: !options.Login?.headed,
-    args: [`--remote-debugging-port=${port}`,'--disable-gpu', '--disable-logging', '--disable-dev-shm-usage', '--no-sandbox'],
+    args: [
+      `--remote-debugging-port=${port}`,
+      '--disable-gpu',
+      '--disable-logging',
+      '--disable-dev-shm-usage',
+      '--no-sandbox',
+    ],
     slowMo: 50,
     timeout: 24000000,
     ignoreHTTPSErrors: true,
@@ -77,17 +83,17 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
   await browser.close();
 
   let report: IReport = {};
-  if(runnerResult.lhr.runtimeError){
+  if (runnerResult.lhr.runtimeError) {
     report = {
       error: {
         requestedUrl: runnerResult.lhr.requestedUrl ?? runnerResult.lhr.requestedUrl,
         runtimeError: runnerResult.lhr.runtimeError ?? runnerResult.lhr.runtimeError,
         runWarnings: runnerResult.lhr.runWarnings[0] ?? runnerResult.lhr.runWarnings[0],
         userAgent: runnerResult.lhr.userAgent ?? runnerResult.lhr.userAgent,
-        environment: runnerResult.lhr.environment ?? runnerResult.lhr.environment
-      }
-    }
-  } else{
+        environment: runnerResult.lhr.environment ?? runnerResult.lhr.environment,
+      },
+    };
+  } else {
     for (const category of finalFlags.onlyCategories) {
       for (const [key] of Object.entries(runnerResult.lhr.categories)) {
         if (key.includes(category) && runnerResult.lhr.categories[key].score * 100 > 0) {
@@ -100,9 +106,12 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
         if (key.includes(audit) && runnerResult.lhr.audits[key].score * 100 > 0) {
           report[audit] = runnerResult.lhr.audits[key].score * 100;
         }
-        if (key === Audits.resourceSummary && runnerResult.lhr.audits[Audits.resourceSummary].details.items.length > 0) {
+        if (
+          key === Audits.resourceSummary &&
+          runnerResult.lhr.audits[Audits.resourceSummary].details.items.length > 0
+        ) {
           const total = runnerResult.lhr.audits['resource-summary'].details.items.filter(
-              (item: { resourceType: string; }) => item.resourceType === 'total',
+            (item: { resourceType: string }) => item.resourceType === 'total',
           );
           report[Audits.resourceSummary] = {
             requestCount: total[0].requestCount,
@@ -140,7 +149,7 @@ export enum Audits {
 }
 
 export type IReport = {
-  error?:{
+  error?: {
     requestedUrl?: string;
     runtimeError?: {
       code?: string;
@@ -149,7 +158,7 @@ export type IReport = {
     runWarnings?: string;
     userAgent?: string;
     environment?: string;
-  }
+  };
   [key: string]: any;
   performance?: number;
   accessibility?: number;

@@ -45,15 +45,14 @@ describe('I should be able to get default metrics', () => {
   });
 });
 
-
 describe('I should be able to debug Lighthouse errors', () => {
   let results: IReport;
   beforeAll(async () => {
     const options = {
       targetUrl: 'https://notavalidurl.com/',
-      lighthouse:{
-        debug: true
-      }
+      lighthouse: {
+        debug: true,
+      },
     };
     results = await lighthouseReport(options);
   });
@@ -61,13 +60,11 @@ describe('I should be able to debug Lighthouse errors', () => {
     expect(results.error!).toBeTruthy();
   });
   it('it should return with an SSL certificate specific error message', () => {
-    expect(results.error?.runtimeError?.message).toEqual('DNS servers could not resolve the provided domain.')
+    expect(results.error?.runtimeError?.message).toEqual('DNS servers could not resolve the provided domain.');
   });
   it('it should return with an SSL certificate specific error code', () => {
-    console.log(results)
-    expect(results.error?.runtimeError?.code).toEqual('DNS_FAILURE')
+    expect(results.error?.runtimeError?.code).toEqual('DNS_FAILURE');
   });
-
 });
 
 describe('I should be able to get Partial metrics for Authenticated App', () => {
