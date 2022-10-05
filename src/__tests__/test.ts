@@ -21,7 +21,7 @@ describe('I should be able to get default metrics', () => {
   let results: IReport;
   beforeAll(async () => {
     const options = {
-      targetUrl: 'https://google.com',
+      targetUrl: 'https://google.com/',
     };
     results = await lighthouseReport(options);
   });
@@ -42,6 +42,28 @@ describe('I should be able to get default metrics', () => {
   });
   it('it should return resource-summary', () => {
     expect(results['resource-summary']!).toBeTruthy();
+  });
+});
+
+describe('I should be able to debug Lighthouse errors', () => {
+  let results: IReport;
+  beforeAll(async () => {
+    const options = {
+      targetUrl: 'https://notavalidurl.com/',
+      lighthouse: {
+        debug: true,
+      },
+    };
+    results = await lighthouseReport(options);
+  });
+  it('it should return an error', () => {
+    expect(results.error!).toBeTruthy();
+  });
+  it('it should return with an SSL certificate specific error message', () => {
+    expect(results.error?.runtimeError?.message).toEqual('DNS servers could not resolve the provided domain.');
+  });
+  it('it should return with an SSL certificate specific error code', () => {
+    expect(results.error?.runtimeError?.code).toEqual('DNS_FAILURE');
   });
 });
 
