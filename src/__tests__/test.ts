@@ -21,7 +21,7 @@ describe('I should be able to get default metrics', () => {
   let results: IReport;
   beforeAll(async () => {
     const options = {
-      targetUrl: 'https://google.com',
+      targetUrl: 'https://google.com/',
     };
     results = await lighthouseReport(options);
   });
@@ -43,6 +43,30 @@ describe('I should be able to get default metrics', () => {
   it('it should return resource-summary', () => {
     expect(results['resource-summary']!).toBeTruthy();
   });
+});
+
+
+describe('I should be able to debug Lighthouse errors', () => {
+  let results: IReport;
+  beforeAll(async () => {
+    const options = {
+      targetUrl: 'https://expired.badssl.com/',
+      lighthouse:{
+        debug: true
+      }
+    };
+    results = await lighthouseReport(options);
+  });
+  it('it should return an error', () => {
+    expect(results.error!).toBeTruthy();
+  });
+  it('it should return with an SSL certificate specific error message', () => {
+    expect(results.error?.runtimeError?.message).toEqual('Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests. (Details: net::ERR_CERT_DATE_INVALID)')
+  });
+  it('it should return with an SSL certificate specific error code', () => {
+    expect(results.error?.runtimeError?.code).toEqual('FAILED_DOCUMENT_REQUEST')
+  });
+
 });
 
 describe('I should be able to get Partial metrics for Authenticated App', () => {
