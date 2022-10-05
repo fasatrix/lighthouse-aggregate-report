@@ -50,7 +50,7 @@ describe('I should be able to debug Lighthouse errors', () => {
   let results: IReport;
   beforeAll(async () => {
     const options = {
-      targetUrl: 'https://expired.badssl.com/',
+      targetUrl: 'https://notavalidurl.com/',
       lighthouse:{
         debug: true
       }
@@ -61,10 +61,11 @@ describe('I should be able to debug Lighthouse errors', () => {
     expect(results.error!).toBeTruthy();
   });
   it('it should return with an SSL certificate specific error message', () => {
-    expect(results.error?.runtimeError?.message).toEqual('Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests. (Details: net::ERR_CERT_DATE_INVALID)')
+    expect(results.error?.runtimeError?.message).toEqual('DNS servers could not resolve the provided domain.')
   });
   it('it should return with an SSL certificate specific error code', () => {
-    expect(results.error?.runtimeError?.code).toEqual('FAILED_DOCUMENT_REQUEST')
+    console.log(results)
+    expect(results.error?.runtimeError?.code).toEqual('DNS_FAILURE')
   });
 
 });

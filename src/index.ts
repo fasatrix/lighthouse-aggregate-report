@@ -58,7 +58,7 @@ export const lighthouseReport = async (options: IOptions): Promise<IReport> => {
     args: [`--remote-debugging-port=${port}`,'--disable-gpu', '--disable-logging', '--disable-dev-shm-usage', '--no-sandbox'],
     slowMo: 50,
     timeout: 24000000,
-    // ignoreHTTPSErrors: true,
+    ignoreHTTPSErrors: true,
   });
 
   await browser.clearPermissions();
