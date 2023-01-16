@@ -1,9 +1,12 @@
-import { lighthouseReport, flagsSettings, Categories, Audits, IReport } from '../index';
+import { lighthouseReport, flagsSettings } from '../index';
+import { Categories, Audits, IReport, IOptions } from '../helpers/types';
+import path from 'path';
+import fs from 'fs';
 
 describe('I should be able to get Partial metrics', () => {
   let results: IReport;
   beforeAll(async () => {
-    const options = {
+    const options: IOptions = {
       targetUrl: 'https://angular.io',
       lighthouse: { onlyCategories: [Categories.bestPractises, Categories.seo] },
     };
@@ -20,7 +23,7 @@ describe('I should be able to get Partial metrics', () => {
 describe('I should be able to get default metrics', () => {
   let results: IReport;
   beforeAll(async () => {
-    const options = {
+    const options: IOptions = {
       targetUrl: 'https://google.com/',
     };
     results = await lighthouseReport(options);
@@ -48,7 +51,7 @@ describe('I should be able to get default metrics', () => {
 describe('I should be able to debug Lighthouse errors', () => {
   let results: IReport;
   beforeAll(async () => {
-    const options = {
+    const options: IOptions = {
       targetUrl: 'https://notavalidurl.com/',
       lighthouse: {
         debug: true,
@@ -70,7 +73,7 @@ describe('I should be able to debug Lighthouse errors', () => {
 describe('I should be able to get Partial metrics for Authenticated App', () => {
   let results: IReport;
   beforeAll(async () => {
-    const options = {
+    const options: IOptions = {
       targetUrl: 'http://automationpractice.multiformis.com/index.php?controller=authentication&back=my-account',
       lighthouse: { onlyCategories: [Categories.bestPractises, Categories.seo] },
       Login: {
@@ -94,7 +97,7 @@ describe('I should be able to get Partial metrics for Authenticated App', () => 
 describe('I should be able to get metrics for Authenticated App if targetUrl and loginUrl are different', () => {
   let results: IReport;
   beforeAll(async () => {
-    const options = {
+    const options: IOptions = {
       targetUrl: 'http://automationpractice.multiformis.com/',
       Login: {
         loginUrl: 'http://automationpractice.multiformis.com/index.php?controller=authentication&back=my-account',
@@ -119,7 +122,7 @@ describe('It should default to Login if both Authorization and Login are passed 
   let resultsReporter: IReport = {};
   let resultsConf: any;
   beforeAll(async () => {
-    const options = {
+    const options: IOptions = {
       targetUrl: 'http://automationpractice.multiformis.com/',
       Login: {
         loginUrl: 'http://automationpractice.multiformis.com/index.php?controller=authentication&back=my-account',
@@ -162,7 +165,7 @@ describe('It should be using extraHeaders if passed in the config', () => {
   let resultsReporter: IReport = {};
   let resultsConf: any;
   beforeAll(async () => {
-    const options = {
+    const options: IOptions = {
       targetUrl: 'http://automationpractice.multiformis.com/',
       lighthouse: {
         extraHeaders: {
@@ -196,7 +199,7 @@ describe('It should be using extraHeaders if passed in the config', () => {
 describe('I should be able to get audits metrics different than default', () => {
   let results: IReport = {};
   beforeAll(async () => {
-    const options = {
+    const options: IOptions = {
       targetUrl: 'https://google.com',
       lighthouse: {
         onlyAudits: [
@@ -248,7 +251,7 @@ describe('I should be able to get audits metrics different than default', () => 
 describe('I should be able to get the default audits metrics for mobile mode', () => {
   let results: IReport = {};
   beforeAll(async () => {
-    const options = {
+    const options: IOptions = {
       isMobile: true,
       targetUrl: 'https://google.com',
     };
@@ -274,5 +277,35 @@ describe('I should be able to get the default audits metrics for mobile mode', (
   });
   it('it should return first-contentful-paint', () => {
     expect(results['first-contentful-paint'] >= 0).toBeTruthy();
+  });
+});
+
+describe('I should be able to create lighthouse HTML report for metrics different than default', () => {
+  beforeAll(async () => {
+    const options: IOptions = {
+      targetUrl: 'https://google.com',
+      htmlReport: true,
+      lighthouse: {
+        onlyAudits: [
+          Audits.firstContentfulPaint,
+          Audits.firstMeaningfulPaint,
+          Audits.largestContentfulPaint,
+          Audits.largestContentfulPaintAllFrames,
+          Audits.cumulativeLayoutShift,
+          Audits.maxPotentialFid,
+          Audits.totalBlockingTime,
+          Audits.interactive,
+          Audits.speedIndex,
+          Audits.redirects,
+          Audits.viewport,
+        ],
+      },
+    };
+    await lighthouseReport(options);
+  });
+  it('it create a Non empty report foldert', () => {
+    const reportDir = path.join(__dirname, '../../reports');
+    const exist = fs.readdirSync(reportDir);
+    expect(exist?.length > 0 ? true : false).toBeTruthy();
   });
 });
