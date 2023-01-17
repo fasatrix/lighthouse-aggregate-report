@@ -1,6 +1,6 @@
 {
   "name": "lighthouse-aggregate-report",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Google Lighthouse aggregate report",
   "main": "lib/index.js",
   "scripts": {

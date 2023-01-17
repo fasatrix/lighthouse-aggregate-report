@@ -12,7 +12,7 @@ export const generateHtmlReport = (runnerResult: { report: any }, options: IOpti
     .concat(uuidv1().split('-')[0]);
 
   // Create reports folder
-  const dirPath = path.join(__dirname, '../../reports');
+  const dirPath = path.join(process.cwd(), 'reports');
 
   // create the report directory, if doesnt exist
   if (!fs.existsSync(`${dirPath}`)) {

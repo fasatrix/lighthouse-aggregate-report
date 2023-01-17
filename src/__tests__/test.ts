@@ -304,7 +304,7 @@ describe('I should be able to create lighthouse HTML report for metrics differen
     await lighthouseReport(options);
   });
   it('it create a Non empty report foldert', () => {
-    const reportDir = path.join(__dirname, '../../reports');
+    const reportDir = path.join(process.cwd(), 'reports');
     const exist = fs.readdirSync(reportDir);
     expect(exist?.length > 0 ? true : false).toBeTruthy();
   });
