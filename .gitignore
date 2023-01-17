@@ -15,3 +15,5 @@ lib
 # Dependency directories
 node_modules/
 
+#html reports
+reports
