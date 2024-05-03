@@ -12,7 +12,6 @@ export type IReport = {
   [key: string]: any;
   performance?: number;
   accessibility?: number;
-  pwa?: number;
   'best-practices'?: number;
   seo?: number;
 };
@@ -20,7 +19,6 @@ export type IReport = {
 export enum Categories {
   performance = 'performance',
   accessibility = 'accessibility',
-  pwa = 'pwa',
   bestPractises = 'best-practices',
   seo = 'seo',
 }
@@ -113,7 +111,7 @@ export interface IOptions {
     /**
      * Description: The desired Lighthouse metrics to be generated
      *
-     * @default 'performance', 'accessibility', 'pwa', 'best-practices', 'seo'
+     * @default 'performance', 'accessibility', 'best-practices', 'seo'
      * @valid all in Categories enum
      */
     onlyCategories?: Categories[];

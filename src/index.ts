@@ -19,13 +19,7 @@ const login = async (options: IOptions, browser: BrowserContext) => {
 };
 
 export const flagsSettings = (flags: IOptions) => {
-  const onlyCategories = [
-    Categories.performance,
-    Categories.accessibility,
-    Categories.pwa,
-    Categories.bestPractises,
-    Categories.seo,
-  ];
+  const onlyCategories = [Categories.performance, Categories.accessibility, Categories.bestPractises, Categories.seo];
 
   const onlyAudits = [Audits.firstContentfulPaint, Audits.interactive, Audits.resourceSummary];
 

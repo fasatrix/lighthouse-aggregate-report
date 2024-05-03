@@ -3,7 +3,7 @@ import fs from 'fs';
 import { IOptions } from '../helpers/types';
 import { v1 as uuidv1 } from 'uuid';
 
-export const generateHtmlReport = (runnerResult: { report: any }, options: IOptions) => {
+export const generateHtmlReport = (runnerResult: any, options: IOptions) => {
   const reportHtml = runnerResult.report;
   const fileName = options.targetUrl
     .replace(/^(https|http)?:\/\//, '')

@@ -10,7 +10,7 @@ A Google Lighthouse aggregate Test Reporter
 ### Usage
 More examples can be found inspecting the [Tests](https://github.com/fasatrix/lighthouse-aggregate-report/blob/main/src/__tests__/test.ts)
 
-1) Default Lighthouse report (performance, accessibility, pwa, best-practices, seo):
+1) Default Lighthouse report (performance, accessibility, best-practices, seo):
       ```javascript
        import { lighthouseReport } from 'lighthouse-aggregate-report';
        const options = {
@@ -18,10 +18,10 @@ More examples can be found inspecting the [Tests](https://github.com/fasatrix/li
        };
        const results = await lighthouseReport(options);
        console.log(results)
-       Output:  { performance: 50, 'accessibility': 83, pwa: 88, best-practices: 90, seo:100}
+       Output:  { performance: 50, 'accessibility': 83, best-practices: 90, seo:100}
        Assertion: expect(results.performance >= 80).toBeTruthy();
      ```
-2)  Only selected metrics (e.g.,  'accessibility', 'pwa'):
+2)  Only selected metrics (e.g.,  'accessibility'):
       ```javascript
        import { lighthouseReport, Categories } from 'lighthouse-aggregate-report';
        const options = {
@@ -29,13 +29,12 @@ More examples can be found inspecting the [Tests](https://github.com/fasatrix/li
             lighthouse: { 
             onlyCategories: [
                 Categories.accessibility,
-                Categories.pwa
             ] 
           },
        };
        const results = await lighthouseReport(options);
        console.log(results)
-       Output:  { 'accessibility': 83, pwa: 88 }
+       Output:  { 'accessibility': 83 }
        Assertion: expect(results.accessibility).to.eq(myThreshold)
     
      ```
@@ -53,7 +52,7 @@ More examples can be found inspecting the [Tests](https://github.com/fasatrix/li
        };
        const results = await lighthouseReport(options);
        console.log(results)
-       Output: {  performance: 97,  accessibility: 80,   pwa: 50, 'best-practices': 100,  seo: 85, interactive: 100,  'first-contentful-paint': 99 }
+       Output: {  performance: 97,  accessibility: 80, 'best-practices': 100,  seo: 85, interactive: 100,  'first-contentful-paint': 99 }
        Assertion: expect(results.interactive).to.eq(myThreshold)
     
      ```    

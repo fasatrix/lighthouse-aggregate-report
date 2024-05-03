@@ -40,9 +40,6 @@ describe('I should be able to get default metrics', () => {
   it('it should return Accessibility', () => {
     expect(results!.accessibility! >= 0).toBeTruthy();
   });
-  it('it should return PWA', () => {
-    expect(results!.pwa! >= 0).toBeTruthy();
-  });
   it('it should return resource-summary', () => {
     expect(results['resource-summary']!).toBeTruthy();
   });
@@ -156,9 +153,6 @@ describe('It should default to Login if both Authorization and Login are passed 
   it('it should return Accessibility', () => {
     expect(resultsReporter!.accessibility! >= 0).toBeTruthy();
   });
-  it('it should return PWA', () => {
-    expect(resultsReporter!.pwa! >= 0).toBeTruthy();
-  });
 });
 
 describe('It should be using extraHeaders if passed in the config', () => {
@@ -190,9 +184,6 @@ describe('It should be using extraHeaders if passed in the config', () => {
   });
   it('it should return Accessibility', () => {
     expect(resultsReporter!.accessibility! >= 0).toBeTruthy();
-  });
-  it('it should return PWA', () => {
-    expect(resultsReporter!.pwa! >= 0).toBeTruthy();
   });
 });
 
@@ -268,9 +259,6 @@ describe('I should be able to get the default audits metrics for mobile mode', (
   });
   it('it should return Accessibility', () => {
     expect(results!.accessibility! >= 0).toBeTruthy();
-  });
-  it('it should return PWA', () => {
-    expect(results!.pwa! >= 0).toBeTruthy();
   });
   it('it should return interactive', () => {
     expect(results.interactive >= 0).toBeTruthy();
